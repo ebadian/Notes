@@ -1,0 +1,696 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2020-07-30 Thu 09:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Docker and Kubernete</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Ali Ebadian" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://thomasf.github.io/solarized-css/solarized-light.min.css" />
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Docker and Kubernete</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org4fb0de0">Docker</a>
+<ul>
+<li><a href="#orgefeba0d">Installation</a>
+<ul>
+<li><a href="#orgcceca11">Auto-compelete</a></li>
+</ul>
+</li>
+<li><a href="#orgbef5f7a">Creating and using containers</a>
+<ul>
+<li><a href="#org4683e55">checking config and isntallation</a></li>
+<li><a href="#orgb154c63">Image vs container</a></li>
+<li><a href="#org52e31f7">Running a container</a></li>
+</ul>
+</li>
+<li><a href="#orgb28f06e">Play</a></li>
+<li><a href="#org377d486">Basic look inside container</a></li>
+<li><a href="#orgef6bde5">Running Shell commands in a container</a></li>
+<li><a href="#orgf07dfd9"><span class="todo TODO">TODO</span> Networks</a>
+<ul>
+<li><a href="#org1a0fa0f">Networks CLI</a></li>
+</ul>
+</li>
+<li><a href="#org1e0bd48">Container images finding and buidling them</a>
+<ul>
+<li><a href="#org5e50e39">What is an images?</a></li>
+</ul>
+</li>
+<li><a href="#org796eb9e">Building Docker Images</a>
+<ul>
+<li><a href="#org127d3a3"><span class="todo TODO">TODO</span> prunning images</a></li>
+</ul>
+</li>
+<li><a href="#org0f5e987">Volumes and Bind mounts</a>
+<ul>
+<li><a href="#orgf73cb19">persistance data</a></li>
+</ul>
+</li>
+<li><a href="#org7c0fe13">Docker Compose</a>
+<ul>
+<li><a href="#org62ee708">docker-compse.yaml</a></li>
+<li><a href="#orga61a236">docker-compose CLI</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+<div id="outline-container-org4fb0de0" class="outline-2">
+<h2 id="org4fb0de0">Docker</h2>
+<div class="outline-text-2" id="text-org4fb0de0">
+</div>
+<div id="outline-container-orgefeba0d" class="outline-3">
+<h3 id="orgefeba0d">Installation</h3>
+<div class="outline-text-3" id="text-orgefeba0d">
+</div>
+<div id="outline-container-orgcceca11" class="outline-4">
+<h4 id="orgcceca11">Auto-compelete</h4>
+<div class="outline-text-4" id="text-orgcceca11">
+<p>
+See <a href="https://docs.docker.com/docker-for-mac/#install-shell-completion">docker guide</a>.
+You might need to add <code>autoload -Uz compinit; compinit</code> to the end <code>.zshrc</code>
+</p>
+</div>
+<ul class="org-ul">
+<li><a id="orgcdb162d"></a>Installing on Linux<br />
+<div class="outline-text-5" id="text-orgcdb162d">
+<p>
+Go to <a href="http://store.docker.com">docker store</a> it has instructions and dont install via package mamanger.
+This will get you the edge builds, which should be fine as docker moves fast.
+</p>
+
+<p>
+A cheat for installing is a script that you find  <a href="http://get.docker.com">here</a>. This gives a script that will install docker with ease.
+Inorder to stop using <code>sudo</code> with every command you have to add your user to the docker group:
+</p>
+<pre class="example">
+sudo usermod -aG docker &lt;USERNAME&gt;
+</pre>
+<p>
+Then log out and log back in again.
+This is not recomended bu security so dont do that on prod. Some distros do not allow you to do this.
+</p>
+
+<p>
+Docker machine and docker compose have to ne installed manually on Linux boxes.
+<a href="https://github.com/docker/machine/releases">Docker machine</a>
+<a href="https://github.com/docker/compose/releases">Docker compose installer</a>
+</p>
+
+<p>
+Since these are manually installed you might have manually update them.
+</p>
+</div>
+</li>
+<li><a id="org39a546a"></a>Shell customization<br />
+<div class="outline-text-5" id="text-org39a546a">
+<p>
+<a href="http://bretfisher.com/shell">see bret's customization</a>
+</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgbef5f7a" class="outline-3">
+<h3 id="orgbef5f7a">Creating and using containers</h3>
+<div class="outline-text-3" id="text-orgbef5f7a">
+</div>
+<div id="outline-container-org4683e55" class="outline-4">
+<h4 id="org4683e55">checking config and isntallation</h4>
+<div class="outline-text-4" id="text-org4683e55">
+</div>
+<ul class="org-ul">
+<li><a id="orgfc87bf6"></a><code>docker version</code><br /></li>
+
+<li><a id="orgb8a2c2c"></a><code>docker info</code><br /></li>
+</ul>
+</div>
+
+<div id="outline-container-orgb154c63" class="outline-4">
+<h4 id="orgb154c63">Image vs container</h4>
+<div class="outline-text-4" id="text-orgb154c63">
+</div>
+<ul class="org-ul">
+<li><a id="orgcdd3c64"></a>An image is the application we want to run<br /></li>
+<li><a id="org58952ad"></a>A container is an instance of that image running as a process<br />
+<div class="outline-text-5" id="text-org58952ad">
+<p>
+You can have many instances of an image running at the same time.
+</p>
+</div>
+</li>
+</ul>
+</div>
+<div id="outline-container-org52e31f7" class="outline-4">
+<h4 id="org52e31f7">Running a container</h4>
+<div class="outline-text-4" id="text-org52e31f7">
+<p>
+<code>docker container run --publish 80:80 ngix</code>
+</p>
+<ul class="org-ul">
+<li>This downloads 'ngix' image from docker hub.</li>
+<li>Starts a container from that image.</li>
+<li>Opened port 80 on the host IP</li>
+<li>Routes that traffic to the container IP, port 80.</li>
+</ul>
+
+<p>
+You can use the option <code>--detach</code> to run the above command in the background. The command will return a unique ID hack.
+To see list the containers running use <code>docker container ls</code>. 
+To stop a running container use <code>docker container stop &lt;CONTAINER ID&gt;</code>.
+By default docker will give a random name that you use to address the container. You can set the name of the container by using <code>--name &lt;NAME&gt;</code> when you start the container.
+<code>docker container logs &lt;CONTAI"NER NAME&gt;</code> will show you the logs produced by the container.
+To clean up the stoped container you can issue the command <code>docker container rm &lt;CONTAINER ID&gt; &lt;CONTAINER ID&gt; ..</code>
+</p>
+
+<p>
+What happens in <code>docker container run</code>
+   1.Looks for that image locally in image cache, doesn't find anything
+   2.Then looks in remote image repository (defaults to Docker Hub) 
+   3.Downloads the latest version (nginx:latest by default) 
+   4.Creates new container based on that image and prepares to start 
+   5.Gives it a virtual IP on a private network inside docker engine 
+   6.Opens up port 80 on host and forwards to port 80 in container 
+   7.Starts container by using the CMD in the image Dockerfile
+</p>
+
+<p>
+Docker is a procerss.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb28f06e" class="outline-3">
+<h3 id="orgb28f06e">Play</h3>
+<div class="outline-text-3" id="text-orgb28f06e">
+<div class="org-src-container">
+<pre class="src src-bash">docker container run --detach --publish <span style="color: #268bd2;">80:80</span>  --name nginx  nginx
+docker container run --detach --publish <span style="color: #268bd2;">3306:3306</span>  --name sql  --env <span style="color: #6c71c4;">MYSQL_RANDOM_ROOT_PASSWORD</span>=yes mysql
+docker container logs sql | grep <span style="color: #2aa198;">"PASSWORD"</span>
+docker container run --detach --publish <span style="color: #268bd2;">8080:80</span>  --name server httpd
+docker container ls -a
+docker container stop server sql nginx
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org377d486" class="outline-3">
+<h3 id="org377d486">Basic look inside container</h3>
+<div class="outline-text-3" id="text-org377d486">
+<p>
+<code>docker container top</code>     - process list in one container <br />
+<code>docker container inspect</code> - details of one container config  <br />
+<code>docker container stats</code>   - performance stats for all containers <br />
+</p>
+</div>
+</div>
+<div id="outline-container-orgef6bde5" class="outline-3">
+<h3 id="orgef6bde5">Running Shell commands in a container</h3>
+<div class="outline-text-3" id="text-orgef6bde5">
+<p>
+<code>docker container run -it</code> - Starts the new container interactivly
+ e.g:
+</p>
+<pre class="example">
+docker container run -it --name proxy nginx bash
+</pre>
+<p>
+The above example what we did was to override the default command that runs with a <code>bash</code> command.
+</p>
+
+<p>
+<code>docker container exec -it</code> - Run command in container currently running
+e.g:
+</p>
+<pre class="example">
+docker container exec -it mysql bash
+</pre>
+<p>
+The above example opens a terminal in the running container <code>mysql</code> 
+<code>-it</code> is two seprate options:
+<code>-t</code> also <code>-tty</code> this is a pseudo-tty -Simulates a real terminal like SSH.   
+<code>-i</code>, <code>--interactive</code> Keeps the session open to receive terminal intput.
+</p>
+</div>
+</div>
+<div id="outline-container-orgf07dfd9" class="outline-3">
+<h3 id="orgf07dfd9"><span class="todo TODO">TODO</span> Networks</h3>
+<div class="outline-text-3" id="text-orgf07dfd9">
+<p>
+<code>--publish</code> (<code>-p</code>) format in HOST:CONTAINER
+</p>
+</div>
+<div id="outline-container-org1a0fa0f" class="outline-4">
+<h4 id="org1a0fa0f">Networks CLI</h4>
+<div class="outline-text-4" id="text-org1a0fa0f">
+</div>
+<ul class="org-ul">
+<li><a id="org5f34b90"></a><span class="todo TODO">TODO</span> What is NAT in networking<br /></li>
+<li><a id="org0256740"></a><code>docker container inspect</code> This shows you the container configuration such as specific container like Networks, IP address, mounts, and current status. It can also be modified to only return a specific piece of data using the —format flag.<br /></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org1e0bd48" class="outline-3">
+<h3 id="org1e0bd48">Container images finding and buidling them</h3>
+<div class="outline-text-3" id="text-org1e0bd48">
+</div>
+<div id="outline-container-org5e50e39" class="outline-4">
+<h4 id="org5e50e39">What is an images?</h4>
+<div class="outline-text-4" id="text-org5e50e39">
+<p>
+Just App binaries and dependencies with metadata about the image and how to run it.
+There is no kernal or any drivers involved, those are provided by the host. (This is different to Virtual Machines)
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org796eb9e" class="outline-3">
+<h3 id="org796eb9e">Building Docker Images</h3>
+<div class="outline-text-3" id="text-org796eb9e">
+<p>
+Dockerfiles are layered, each layer is cached so in the next build if the layer has not changed (its hash hasn't changed) it will not rebuild it from scratch.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-docker">FROM //Typical start of docker file. Normally something small like Alpine linux
+ENV  //Sets enviroment vars
+ARGS //Set Variables
+RUN  // Command to run for set up such as apt-get
+WORKDIR // this is prefered way of changing directory over RUN cd
+EXPOSE //This opens up a port so that you can 'map' to it when running the image using -p option (e.g 80:3000)
+CMD     //The last command to run, such as /bash. This is inhereted from base image if not included.
+</pre>
+</div>
+
+<p>
+For variables that are needed to build an image only its best to use <code>ARG</code> and inorder to set variables that are needed as <i>Enviroment Variables</i> in the ruuning container <code>ENV</code> is best suited.
+</p>
+</div>
+
+<div id="outline-container-org127d3a3" class="outline-4">
+<h4 id="org127d3a3"><span class="todo TODO">TODO</span> prunning images</h4>
+</div>
+</div>
+<div id="outline-container-org0f5e987" class="outline-3">
+<h3 id="org0f5e987">Volumes and Bind mounts</h3>
+<div class="outline-text-3" id="text-org0f5e987">
+</div>
+<div id="outline-container-orgf73cb19" class="outline-4">
+<h4 id="orgf73cb19">persistance data</h4>
+<div class="outline-text-4" id="text-orgf73cb19">
+<p>
+Containers are immutable and ephermal, this means data will disapear as soon as its removed. So data such databases might lose data. To keep the data docker in two main ways:
+</p>
+</div>
+<ul class="org-ul">
+<li><a id="org1533e36"></a>Data Volumes<br />
+<div class="outline-text-5" id="text-org1533e36">
+<p>
+Makes a special location outside of container UFS. Volumes live after the container and are only removed manually.
+</p>
+</div>
+<ul class="org-ul">
+<li><a id="orgc4520cc"></a>Creating Volume<br />
+<div class="outline-text-6" id="text-orgc4520cc">
+<p>
+To Create a volume create an entry in the docker file:
+</p>
+<div class="org-src-container">
+<pre class="src src-Dockerfile">Volume /var/lib/mysql
+</pre>
+</div>
+<p>
+This is setting the file path within the container file system which we want to persist on the host.
+To see current volume and thier set up
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">docker image inspect 
+</pre>
+</div>
+<p>
+Here you can see the image config including <code>volumes</code> and <code>mounts</code>. In the mount section you can see where the volume is mounted, i.e how/where the host file is mapped to the container path. Under <code>"Mounts"</code> the field <code>source</code> gives the location of the host that the volume is writting to.
+The volumes currently mounted can be listed: 
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">docker volume ls
+</pre>
+</div>
+<p>
+The <code>volume name</code> from above command then can be passed into
+</p>
+<pre class="example">
+docker volume inspect &lt;volume name&gt;
+</pre>
+<p>
+this will give all the details about the volume, including <code>mount point</code> and <code>scope</code>.
+Inorder to use have more meaningful name for the volume we can use the <code>-v</code> option when we run the image.
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">docker container run -d --name mysql -e <span style="color: #6c71c4;">MYSQL_ALLOW_EMPTY_PASSWORD</span>=True -v mysql-db:/var/lib/mysql mysql
+</pre>
+</div>
+<p>
+This is called the named volume. The syntax is as follows <code>volumename:volume location</code>.
+</p>
+</div>
+</li>
+</ul>
+</li>
+
+<li><a id="org2a5f471"></a><span class="todo TODO">TODO</span> Bind Mounts<br />
+<div class="outline-text-5" id="text-org2a5f471">
+<p>
+Link container path to host path, i.e. maps hots file/directory to the container file/directory.
+When the file in the host changes the effect is seen in the running container. Bind mounts are used to speed up developments.
+Bind mounts can't be defined in the Dockerfile, they must be defined at <code>container run</code>. 
+The syntax is similar to named volumes, the difference is the bind mounts start with <code>/</code> .
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">docker container run -d --name ngix -p <span style="color: #268bd2;">80:80</span> -v $<span style="color: #839496;">(</span><span style="color: #d33682;">pwd</span><span style="color: #839496;">)</span>:/user/share/nginx/html nginx
+</pre>
+</div>
+<p>
+The <code>$(pwd)</code> saves us from typing the full path of current directory.
+</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org7c0fe13" class="outline-3">
+<h3 id="org7c0fe13">Docker Compose</h3>
+<div class="outline-text-3" id="text-org7c0fe13">
+<p>
+Docker compose is used to configure relationships between containers. It can also be used to save our container run settings in an easy to read file. It helps to create a one liner run command to bing up a whole stack. 
+</p>
+</div>
+<div id="outline-container-org62ee708" class="outline-4">
+<h4 id="org62ee708">docker-compse.yaml</h4>
+<div class="outline-text-4" id="text-org62ee708">
+<p>
+    In this file, the solution options for container, networks and volumes are defined.
+    <code>compose</code> YAML format has its own versions, with each version more features have been added to docker.
+    These files can be used locally by <code>docker-compose</code> or directly in production with Swarm by <code>docker</code> command.
+The default name for these files is <code>docker-compose.yaml</code> however they can be anything by using <code>docker-compose -f</code>
+Full reference for <a href="https://docs.docker.com/compose/compose-file/">is here</a>. However here is quick example of a <code>docker-compose.yaml</code> :
+</p>
+</div>
+
+<ul class="org-ul">
+<li><a id="org92b9644"></a><span class="todo TODO">TODO</span> &#x2013; comment on each line like in videos @ 3:46<br />
+<div class="outline-text-5" id="text-org92b9644">
+<div class="org-src-container">
+<pre class="src src-yaml"><span style="color: #6c71c4;">version</span>: <span style="color: #2aa198;">'3.1'</span>  <span style="color: #586e75; font-style: italic;"># </span><span style="color: #586e75; font-style: italic;">if no version is specified then v1 is assumed. Recommend v2 minimum</span>
+
+<span style="color: #6c71c4;">services</span>:  <span style="color: #586e75; font-style: italic;"># </span><span style="color: #586e75; font-style: italic;">containers. same as docker run</span>
+ <span style="color: #6c71c4;">servicename</span>: <span style="color: #586e75; font-style: italic;"># </span><span style="color: #586e75; font-style: italic;">a friendly name. this is also DNS name inside network</span>
+   <span style="color: #6c71c4;">image</span>: <span style="color: #586e75; font-style: italic;"># </span><span style="color: #586e75; font-style: italic;">Optional if you use build:</span>
+   <span style="color: #6c71c4;">command</span>: <span style="color: #586e75; font-style: italic;"># </span><span style="color: #586e75; font-style: italic;">Optional, replace the default CMD specified by the image</span>
+   <span style="color: #6c71c4;">environment</span>: <span style="color: #586e75; font-style: italic;"># </span><span style="color: #586e75; font-style: italic;">Optional, same as -e in docker run</span>
+   <span style="color: #6c71c4;">volumes</span>: <span style="color: #586e75; font-style: italic;"># </span><span style="color: #586e75; font-style: italic;">Optional, same as -v in docker run</span>
+ <span style="color: #6c71c4;">servicename2</span>:
+
+<span style="color: #6c71c4;">volumes</span>: <span style="color: #586e75; font-style: italic;"># </span><span style="color: #586e75; font-style: italic;">Optional, same as docker volume create</span>
+
+<span style="color: #6c71c4;">networks</span>: <span style="color: #586e75; font-style: italic;"># </span><span style="color: #586e75; font-style: italic;">Optional, same as docker network create</span>
+
+
+
+
+</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+
+<div id="outline-container-orga61a236" class="outline-4">
+<h4 id="orga61a236">docker-compose CLI</h4>
+<div class="outline-text-4" id="text-orga61a236">
+<p>
+seperate binary (bundled with mac and windows but linux have download/install sepreatly)
+suited for local not prod.
+</p>
+
+<p>
+docker-compose up
+docker-compose down
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Ali Ebadian</p>
+<p class="date">Created: 2020-07-30 Thu 09:55</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
