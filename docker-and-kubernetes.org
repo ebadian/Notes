@@ -18,6 +18,14 @@
 #+LaTeX_HEADER: \usepackage{courier}
 #+LaTeX_HEADER: \linespread{1.10}
 
+
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+OPTIONS: num:nil toc:2
+# None/Fade/Slide/Convex/Concave/Zoom
+# Black/White/League/Sky/Beige/Simple/Serif/Blood/Night/Moon/Solarized
+#+REVEAL_THEME: sky
+
+
 # This file is the default header for new Org files in Worg.  Feel free
 # to tailor it to your needs.
 
@@ -209,10 +217,137 @@ Full reference for [[https://docs.docker.com/compose/compose-file/][is here]]. H
 
  #+end_src
 
-*** docker-compose CLI
+***** docker-compose CLI
 seperate binary (bundled with mac and windows but linux have download/install sepreatly)
 suited for local not prod.
 
 docker-compose up
 docker-compose down
+* Swarm
+Swarm has to be enabled. Whether swarm is enabled
+#+BEGIN_SRC
+docker info | grep -i "swarm"
+#+END_SRC
+** TODO RAFT
+** TODO Manager Node
+** TODO Worker Node
+**
 
+* Kubernetes
+It is a popular orchestrator released by Google and maintained by comminuty. It runs on top of docker as a set of APIs in conatiners which provides API/CLI to manage conayiners across servers. Most cloud providers will have thier own distrobution of it available, like the EKS from aws.
+** TODO Architecture
+*** Control panel
+3 masters which have
+- etcd
+- API
+- Schedular
+- Control manager
+- CoreBNS
+
+*** Nodes
+They have
+- Kubelet
+- kube-proxy
+
+** Minikube
+*** TODO Install minikube
+*** TODO Run minikube
+~minikube start~
+*** Test minikube
+mini kube inserts configs into ~~/.kube/config~
+At the end of the file see
+#+BEGIN_SRC text
+
+- name: minikube
+  user:
+    client-certificate: /Users/ebadiana/.minikube/profiles/minikube/client.crt
+    client-key: /Users/ebadiana/.minikube/profiles/minikube/client.key
+#+END_SRC
+
+
+#+BEGIN_SRC bash
+
+kubectl create deployment hello-node --image=k8s.gcr.io/echoserver:1.4
+kubectl expose deployment hello-minikube --type=NodePort --port=8080
+minikube service hello-node
+#+END_SRC
+
+The last command will open the browser to dispaly config:
+#+BEGIN_SRC
+CLIENT VALUES:
+client_address=172.17.0.3
+command=GET
+real path=/
+query=nil
+request_version=1.1
+request_uri=http://127.0.0.1:8080/
+
+SERVER VALUES:
+server_version=nginx: 1.10.0 - lua: 10001
+
+HEADERS RECEIVED:
+accept=text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+accept-encoding=gzip, deflate
+accept-language=en-GB,en;q=0.5
+connection=keep-alive
+cookie=PGADMIN_KEY=f521540f-4134-4b44-b185-5073d3ad8ff6; PGADMIN_LANGUAGE=en
+dnt=1
+host=127.0.0.1:65481
+upgrade-insecure-requests=1
+user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:79.0) Gecko/20100101 Firefox/79.0
+BODY:
+-no body in request-
+
+#+END_SRC
+
+*** TODO Stop minikube
+~minikube stop~
+*** TODO Delete
+~minikube delete~
+
+** Helm, packaaging and deploying
+Helm is a package manager for kubernetes.
+*** Charts
+    Charts is a collection of files that describe a set Kubernetes resources.  A single chart can deploy an app, a piece of software or a database. it can also have dependencies.
+    Charts use templates that will generate yaml files.
+
+*** TODO What is tiller?
+*** common Helm commands
+
+|--------------------------------------------+---------------------------------|
+| Command                                    | Description                     |
+|--------------------------------------------+---------------------------------|
+| ~helm init~                                | Install *tiller* on the cluster |
+| ~helm reset~                               | Remove *tiller* from cluster    |
+| ~helm install~                             | Install a helm chart            |
+| ~helm search~                              | search for a chart              |
+| ~helm list~                                | list releases                   |
+| ~helm upgrade~                             | upgrade a release               |
+| ~helm rollback~                            | rollback a release              |
+| ~helm uninstall <pod name> -n <namespace>~ |                                 |
+|--------------------------------------------+---------------------------------|
+*** TODO Templates
+These are Kubernetes mainifest files that describe the resources, which have to be deployed on the cluster.
+*** TODO ~values.yaml~
+This file provides default configureation data for the templates in a structured foramt.
+* Cheat sheets
+|----------+-----------------------------------------------------------+---------------------------------|
+| Tool     | Command                                                   | Description                     |
+|----------+-----------------------------------------------------------+---------------------------------|
+| kubectl  | config get-contetexs                                      | Displays all contetexs/clusters |
+|          | config use context <cluster-name>                         | switches the context/cluster    |
+|          | logs -f -n <namespace> <podname>                          | view logs from pod              |
+|          | exec --stdin --tty <pod-name> -n <namespace> -- /bin/bash | ssh into running pod            |
+|----------+-----------------------------------------------------------+---------------------------------|
+| minikube | start / stop /delete                                      |                                 |
+|----------+-----------------------------------------------------------+---------------------------------|
+
+*** commands ran for play
+
+kubectl create deployment hello-node --image=k8s.gcr.io/echoserver:1.4
+kubectl expose deployment hello-minikube --type=NodePort --port=8080
+minikube service hello-node
+
+*** TO READ
+
+**** Vagrant
