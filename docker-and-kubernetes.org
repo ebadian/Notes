@@ -236,20 +236,84 @@ docker info | grep -i "swarm"
 * Kubernetes
 It is a popular orchestrator released by Google and maintained by comminuty. It runs on top of docker as a set of APIs in conatiners which provides API/CLI to manage conayiners across servers. Most cloud providers will have thier own distrobution of it available, like the EKS from aws.
 ** TODO Architecture
-*** Control panel
+*** Control panel / Master
+It manages, plans schedules and monitors Nodes.
 3 masters which have
-- etcd
-- API
-- Schedular
-- Control manager
-- CoreBNS
 
-*** Nodes
+
+- Schedular
+- CoreDNS
+**** ETCD
+It is a distributed rliable key-value store that is simple secure and fast.
+Can be installed on any OS and once its running (~./etcd~) it listens to port ~2379~.
+Crude analogy, its like a hashmap.
+Basic usage:
+#+BEGIN_SRC
+./etcdctl set key1 value1
+./etcdctl get key1
+#+END_SRC
+
+It's role in Kubernetes is to manage all information about:
+   - Nodes
+   - PODs
+   - Configs
+   - Accounts
+   - Roles
+   - Binding
+Whithin Kubernetes ETCD is resposible for everything that is seen when ~kubectl get~ command is issued. Any changes to Kubernetes is only considered done once the ~etcd~ is upated.
+***** TODO Manual Kubernetes setup
+ETCD has to be downloaded and installed manually
+***** TODO Using kubeadm to install
+It will install etcd as a pod
+To explore what keys are stored on the etcd server run
+#+BEGIN_SRC
+kubectl exec etcd-master -n kube-system etcdctl get / --prefix -keys-only
+#+END_SRC
+
+**** Kube API
+This is the primaray managment component, all communcations/interactions in and to kubernetes, even between components, are done via the api server.
+When a command or a post resquest is sent API, it will carry the following steps:
+    - Authenticate User
+    - Validates the request
+    - Retrive the data
+    - Updates the ETCD and related component such as Schedular and Kubelets
+If the kubernetes is installed via ~kubeadm~ then it is deployed as a pod on the master node and can be views using:
+#+BEGIN_SRC
+kubectl get pods -n kube-system
+#+END_SRC
+And its options can be viewed in ~/etc/kubernetes/manifests/kube-apiserver.yaml~
+In a none-kubeadm setup the options are located in ~/etc/systemd/system/kube-apiserver.service~
+The current running options can also be viewed via:
+#+BEGIN_SRC
+ps -aux | grep kube-apiserver
+#+END_SRC
+
+**** Kube Controller manager
+It's primary task is to monitor the state of the cluster and reconcile the current state if and when current state is not aligned with desired state. It does this by running multiple controller processes. These controllers include:
+    - replication controller
+    - endpoints controller
+    - node controller
+    - token controller
+    - service controller
+If the kubernetes has been installed with kubeadmn, it's installed as a pod in ~kube-system~ namespace. With such installation the options for this component can be found in ~/etc/kubernetes/manifests/kube-controller-manager.yaml~
+In a non-kubeadmn install these options maybe found in ~/etc/systemd/system/kube-controller-manager.service~
+Again the current effective options can also be viewed using:
+#+BEGIN_SRC
+ps -aux | grep kube-controller-manager
+#+END_SRC
+
+
+
+*** Worker Nodes
+They host Applications as containers.
 They have
 - Kubelet
 - kube-proxy
+- Container runtime engine
 
+  
 ** Minikube
+
 *** TODO Install minikube
 *** TODO Run minikube
 ~minikube start~
@@ -331,16 +395,20 @@ These are Kubernetes mainifest files that describe the resources, which have to 
 *** TODO ~values.yaml~
 This file provides default configureation data for the templates in a structured foramt.
 * Cheat sheets
-|----------+-----------------------------------------------------------+---------------------------------|
-| Tool     | Command                                                   | Description                     |
-|----------+-----------------------------------------------------------+---------------------------------|
-| kubectl  | config get-contetexs                                      | Displays all contetexs/clusters |
-|          | config use context <cluster-name>                         | switches the context/cluster    |
-|          | logs -f -n <namespace> <podname>                          | view logs from pod              |
-|          | exec --stdin --tty <pod-name> -n <namespace> -- /bin/bash | ssh into running pod            |
-|----------+-----------------------------------------------------------+---------------------------------|
-| minikube | start / stop /delete                                      |                                 |
-|----------+-----------------------------------------------------------+---------------------------------|
+|----------+-----------------------------------------------------------+------------------------------------------------------|
+| Tool     | Command                                                   | Description                                          |
+|----------+-----------------------------------------------------------+------------------------------------------------------|
+| kubectl  | config get-contetexs                                      | Displays all contetexs/clusters                      |
+|          | config use context <cluster-name>                         | switches the context/cluster                         |
+|          | logs -f -n <namespace> <podname>                          | view logs from pod. -f Tails the logs                |
+|          | exec --stdin --tty <pod-name> -n <namespace> -- /bin/bash | ssh into running pod                                 |
+|          | get namespaces                                            | Lists all namespaces in the cluster                  |
+|          | get pod <pod-id> -o yaml                                  | Get a pods yaml ( might have to use -n <namespace> ) |
+|          | get pods -n <namespace>                                   | Lists all the pods in the namespace                  |
+|          | get pods -n kube-system                                   | will return all kubernetes system pods               |
+|----------+-----------------------------------------------------------+------------------------------------------------------|
+| minikube | start / stop /delete                                      |                                                      |
+|----------+-----------------------------------------------------------+------------------------------------------------------|
 
 *** commands ran for play
 
