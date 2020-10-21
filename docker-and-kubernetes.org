@@ -237,12 +237,8 @@ docker info | grep -i "swarm"
 It is a popular orchestrator released by Google and maintained by comminuty. It runs on top of docker as a set of APIs in conatiners which provides API/CLI to manage conayiners across servers. Most cloud providers will have thier own distrobution of it available, like the EKS from aws.
 ** TODO Architecture
 *** Control panel / Master
-It manages, plans schedules and monitors Nodes.
-3 masters which have
 
-
-- Schedular
-- CoreDNS
+**** TODO CoreDNS
 **** ETCD
 It is a distributed rliable key-value store that is simple secure and fast.
 Can be installed on any OS and once its running (~./etcd~) it listens to port ~2379~.
@@ -302,12 +298,27 @@ Again the current effective options can also be viewed using:
 ps -aux | grep kube-controller-manager
 #+END_SRC
 
+**** Schedular
+It decides which pods go on to which nodes. It doesn't place the pods on the nodes, that is the job of the ~kubelet~.
+Schedular decides on which notes are best to place the pods based on criterias such as resources.
+It goes through two phases in order to make this decision.
+    1 - Filtering Nodes
+      First it will filter out nodes which do not meet the resources criteria for the pod. For example if the pods needs 5 cpus, then all the pods with less CPUs available are filtered out.
+    2 - Ranking Nodes
+        It uses a priority function to assign a score on a scale 0 - 10. For example the schedular will calculate the resources that will be free after it places the pod on them.
+
 
 
 *** Worker Nodes
 They host Applications as containers.
 They have
-- Kubelet
+**** Kubelet
+This service runs on every worker nodes. Their job is to manage containers. It will makes sures that the containers are running and are healthy. They also manage the resources on the nodes which they are running on. They are also the only only point of contact between API server on the master and the worker nodes.
+
+Kubelets register the Node with the API server and once it's instucted to do so it will pull the image and create the pods. It will then monitor the node and the pods and report back their health checks to the kube server api (on a timely maner, by default every 5 mins)
+
+One major differece between kubelets and other components is that kubeadm does not install this component, they have to be installed manually.
+
 - kube-proxy
 - Container runtime engine
 
