@@ -319,8 +319,9 @@ This service runs on every worker nodes. Their job is to manage containers. It w
 Kubelets register the Node with the API server and once it's instucted to do so it will pull the image and create the pods. It will then monitor the node and the pods and report back their health checks to the kube server api (on a timely maner, by default every 5 mins)
 
 One major differece between kubelets and other components is that kubeadm does not install this component, they have to be installed manually.
+**** TODO kube-proxy
+Each worker node has a proxy that acts as a network proxy and a load balancer for workloads running on worker nodes. Each request that is comming from an external load balancer are redirected to conatiners (running in the pods) throught these proxies.
 
-- kube-proxy
 - Container runtime engine
 
   
